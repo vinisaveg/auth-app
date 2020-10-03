@@ -6,17 +6,21 @@ import { Field, ObjectType } from "type-graphql";
 export class User {
   @PrimaryKey()
   @Field()
-  id: string;
+  id!: number;
 
-  @Property()
+  @Property({ type: "text", unique: true })
   @Field()
-  username: string;
+  username!: string;
 
-  @Property()
-  @Field()
-  password: string;
+  @Property({ type: "text" })
+  // @Field()
+  password!: string;
 
-  @Property()
-  @Field(() => Date)
+  @Property({ type: "date" })
+  @Field(() => String)
   createdAt = new Date();
+
+  @Property({ type: "date", onUpdate: () => new Date() })
+  @Field(() => String)
+  updatedAt = new Date();
 }
