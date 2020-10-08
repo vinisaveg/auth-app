@@ -3,31 +3,19 @@ import Link from "next/link";
 import { useQuery } from "urql";
 
 import { Container } from "../components/Container";
-
-const UsersQuery = `
-    query {
-      users {
-        id
-        username
-        createdAt
-        updatedAt
-      }
-    }
-`;
+import { usersQuery } from "../graphql/queries/usersQuery";
 
 const Index = () => {
   const [usersResult, reexecuteQuery] = useQuery({
-    query: UsersQuery,
+    query: usersQuery,
   });
 
   const { data } = usersResult;
 
-  console.log(data);
-
   return (
     <Container height="100vh">
       <Flex flexDir="column" alignItems="center" justifyContent="center">
-        <Heading mb={3}>Hello!</Heading>
+        <Heading mb={3}>Hello Stranger!</Heading>
 
         <ButtonGroup spacing={4}>
           <Link href="/login">

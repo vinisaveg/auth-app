@@ -17,6 +17,7 @@ const bootstrap = async () => {
   const apolloServer = new ApolloServer({
     schema: await buildSchema({
       resolvers: [userResolver],
+      validate: false,
     }),
     context: ({ req, res }) => ({ em: mikro_orm.em, req, res }),
   });

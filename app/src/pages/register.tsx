@@ -2,13 +2,17 @@ import React, { FunctionComponent } from "react";
 import { useFormik } from "formik";
 import { useRouter } from "next/dist/client/router";
 import { Button, Flex, Heading, Spinner } from "@chakra-ui/core";
+import { useMutation } from "urql";
 
 import { validationSchema } from "../utils/validationSchema";
 import { Container } from "../components/Container";
 import InputField from "../components/InputField";
+import { registerUserMutation } from "../graphql/mutaions/registerUserMutation";
 
 const Register: FunctionComponent = () => {
   const router = useRouter();
+
+  const [registerResult, register] = useMutation(registerUserMutation);
 
   const formik = useFormik({
     initialValues: {
@@ -17,8 +21,10 @@ const Register: FunctionComponent = () => {
       confirmPassword: "",
     },
     onSubmit: async (values, actions) => {
-      console.log(values);
-      actions.resetForm();
+      const response = await register(values);
+
+      console.log(response.data.register);
+
       router.push("/");
     },
     validationSchema: validationSchema,
@@ -43,7 +49,7 @@ const Register: FunctionComponent = () => {
             label="password"
             placeholder="Password"
             error={formik.errors.password}
-            type="text"
+            type="password"
             value={formik.values.password}
             handleChange={formik.handleChange}
           />
@@ -52,7 +58,7 @@ const Register: FunctionComponent = () => {
             label="confirmPassword"
             placeholder="Confirm Password"
             error={formik.errors.confirmPassword}
-            type="text"
+            type="password"
             value={formik.values.confirmPassword}
             handleChange={formik.handleChange}
           />
