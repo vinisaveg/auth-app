@@ -1,14 +1,18 @@
 import React, { FunctionComponent } from "react";
 import { useFormik } from "formik";
 import { useRouter } from "next/dist/client/router";
+import {useMutation} from 'urql'
 
 import { Container } from "../components/Container";
 import { Button, Flex, Heading, Spinner } from "@chakra-ui/core";
 import { validationSchema } from "../utils/validationSchema";
 import InputField from "../components/InputField";
+import { loginUserMutation } from "../graphql/mutaions/loginUserMutation";
 
 const Login: FunctionComponent = () => {
   const router = useRouter();
+
+  const [loginResult, login] = useMutation(loginUserMutation)
 
   const formik = useFormik({
     initialValues: {
@@ -16,8 +20,9 @@ const Login: FunctionComponent = () => {
       password: "",
     },
     onSubmit: async (values, actions) => {
-      console.log(values);
-      actions.resetForm();
+      const response = await login(values)
+      console.log(response.data)
+
       router.push("/");
     },
     validationSchema: validationSchema,
