@@ -35,8 +35,8 @@ const bootstrap = async () => {
       cookie: {
         sameSite: "lax", //csrf
         httpOnly: true,
-        secure: true,
-        maxAge: 1000 * 60 * 60 * 24, // 1 day
+        secure: env.PROD,
+        maxAge: 1000 * 60 * 60 * 24 , // 1 day
       },
     })
   );
@@ -58,6 +58,7 @@ const bootstrap = async () => {
 
   apolloServer.applyMiddleware({
     app,
+    cors: false
   });
 
   app.listen(4000, () => {

@@ -22,9 +22,23 @@ class UsernamePasswordInput {
 
 @Resolver()
 export class userResolver {
+
+  @Query(() => User)
+  async auth(
+    @Ctx() {em, req}: MyContext
+  ): Promise<User | null> {
+    if(!req.session.userId) {
+      return null
+    }
+
+    const user = await em.findOne(User, {id: req.session.userId})
+
+    return user
+
+  }
+  
   @Query(() => [User])
-  users(@Ctx() { em, req }: MyContext): Promise<User[]> {
-    console.log(req.session);
+  users(@Ctx() { em }: MyContext): Promise<User[]> {
     return em.find(User, {});
   }
 
@@ -46,4 +60,29 @@ export class userResolver {
 
     return newUser;
   }
+
+  @Mutation(() => User, {nullable: true})
+  async login(
+    @Ctx() { em, req }: MyContext,
+    @Arg("options") options: UsernamePasswordInput
+  ): Promise<User | null> {
+
+    const user = await em.findOne(User, {username: options.username})
+
+    if(user) {
+      const verifyPassword = await argon2.verify(user.password, options.password)
+
+      if(verifyPassword) {
+        req.session.userId = user.id
+        return user
+      }
+        
+      return null
+
+    }
+    
+
+    return null
+  }
+
 }

@@ -11,7 +11,7 @@ const Index = () => {
   });
 
   const { data } = usersResult;
-  console.log(data);
+  // console.log(data);
 
   return (
     <Container height="100vh">
