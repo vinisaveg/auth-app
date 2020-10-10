@@ -3,20 +3,32 @@ import Link from "next/link";
 import { useQuery } from "urql";
 
 import { Container } from "../components/Container";
-import { usersQuery } from "../graphql/queries/usersQuery";
+import { authQuery } from "../graphql/queries/authQuery";
 
 const Index = () => {
-  const [usersResult, reexecuteQuery] = useQuery({
-    query: usersQuery,
-  });
 
-  const { data } = usersResult;
-  // console.log(data);
+  const [authResult, reexecuteQuery] = useQuery({
+    query: authQuery
+  })
+
+  const {fetching, data} = authResult
+  //console.log(authResult)
+
+  let grettings
+
+  if(fetching) {
+    grettings =  "Stranger"
+  }
+
+  if(data?.auth) {
+    grettings = data.auth.username
+  }
+  
 
   return (
     <Container height="100vh">
       <Flex flexDir="column" alignItems="center" justifyContent="center">
-        <Heading mb={3}>Hello Stranger!</Heading>
+        <Heading mb={3}>Hello {grettings}</Heading>
 
         <ButtonGroup spacing={4}>
           <Link href="/login">

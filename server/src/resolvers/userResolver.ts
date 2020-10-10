@@ -23,10 +23,13 @@ class UsernamePasswordInput {
 @Resolver()
 export class userResolver {
 
-  @Query(() => User)
+  @Query(() => User, {nullable: true})
   async auth(
     @Ctx() {em, req}: MyContext
   ): Promise<User | null> {
+
+    console.log(req.session)
+
     if(!req.session.userId) {
       return null
     }

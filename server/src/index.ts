@@ -23,6 +23,13 @@ const bootstrap = async () => {
   const redisClient = redis.createClient();
 
   app.use(
+    cors({
+      origin: "http://localhost:3000",
+      credentials: true,
+    })
+  );
+
+  app.use(
     session({
       name: "sid",
       store: new RedisStore({
@@ -38,13 +45,6 @@ const bootstrap = async () => {
         secure: env.PROD,
         maxAge: 1000 * 60 * 60 * 24 , // 1 day
       },
-    })
-  );
-
-  app.use(
-    cors({
-      origin: "http://localhost:3000",
-      credentials: true,
     })
   );
 
